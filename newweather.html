@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Weather App</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: Arial, Helvetica, sans-serif;
+    }
+
+    body {
+      height: 100%;
+      background-image: url("https://images.pexels.com/photos/186980/pexels-photo-186980.jpeg?cs=srgb&dl=pexels-tahir-shaw-50609-186980.jpg&fm=jpg");
+      background-position: center;
+      background-repeat: no-repeat;
+      background-size: cover;
+    }
+
+    header {
+      background-color: transparent;
+      padding: 20px 40px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: absolute;
+      width: 100%;
+      z-index: 10;
+    }
+
+    header strong {
+      font-size: 24px;
+      color: white;
+      cursor: pointer;
+    }
+
+    nav {
+      display: flex;
+      gap: 20px;
+    }
+
+    nav a {
+      color: white;
+      text-decoration: none;
+      font-weight: bold;
+      font-size: 16px;
+    }
+
+    .menu-toggle {
+      display: none;
+      flex-direction: column;
+      cursor: pointer;
+    }
+
+    .menu-toggle span {
+      height: 3px;
+      width: 25px;
+      background: white;
+      margin: 4px 0;
+      border-radius: 2px;
+    }
+
+    .nav-links {
+      display: flex;
+      left: 0;
+      align-items: left;
+      gap: 20px;
+    }
+    .container {
+      background: rgba(27, 24, 24, 0.5);
+      color: #fff;
+      padding: 2rem;
+      width: 40%;
+      
+      margin: 6rem auto;
+      border-radius: 10px;
+    }
+
+    .weather-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    input {
+      border: none;
+      background: #1e1e1e;
+      outline: none;
+      color: #fff;
+      padding: 0.5rem 2.5rem;
+      border-radius: 5px;
+      width: 100%;
+    }
+
+    input::placeholder {
+      color: #fff;
+    }
+
+    .weather-search {
+      position: relative;
+      flex: 1;
+    }
+
+    .weather-search i {
+      position: absolute;
+      left: 10px;
+      top: 10px;
+      font-size: 15px;
+      color: #fff;
+    }
+
+    .weather-units {
+      font-size: 1.5rem;
+    }
+
+    .weather-units span {
+      cursor: pointer;
+    }
+
+    .weather-units span:first-child {
+      margin-right: 0.5rem;
+    }
+
+    .weather-body {
+      text-align: center;
+      margin-top: 3rem;
+    }
+
+    .weather-datetime {
+      margin-bottom: 2rem;
+      font-size: 14px;
+    }
+
+    .weather-forecast {
+      background: #1e1e1e;
+      display: inline-block;
+      padding: 0.5rem 1rem;
+      border-radius: 30px;
+    }
+
+    .weather-icon img {
+      width: 100px;
+    }
+
+    .weather-temp {
+      font-size: 1.75rem;
+    }
+
+    .weather-minmax {
+      display: flex;
+      justify-content: center;
+    }
+
+    .weather-minmax p {
+      font-size: 14px;
+      margin: 0.5rem;
+    }
+
+    .weather-info {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      grid-gap: 1rem;
+      margin-top: 3rem;
+    }
+
+    .weather-card {
+      display: flex;
+      align-items: center;
+      background: #1e1e1e;
+      padding: 1rem;
+      border-radius: 10px;
+    }
+
+    .weather-card i {
+      font-size: 1.5rem;
+      margin-right: 1rem;
+    }
+
+    .weather-card p {
+      font-size: 14px;
+    }
+
+    
+
+    @media (max-width: 1248px) {
+       .strong{display: none;}
+      .menu-toggle {
+        display: none;
+      }
+
+      .nav-links {
+        display: none;
+        flex-direction: column;
+        background-color: rgba(0, 0, 0, 0.8);
+        position: absolute;
+        top: 70px;
+        right: 20px;
+        padding: 10px;
+        border-radius: 8px;
+        z-index: 999;
+      }
+
+      .nav-links a {
+        color: white;
+        padding: 10px;
+        text-align: right;
+        font-size: 16px;
+      }
+
+      .nav-links.show {
+        display: flex;
+      }
+
+      .content h1 {
+        font-size: 32px;
+      }
+
+      .content p {
+        font-size: 16px;
+      }
+
+      .cta {
+        font-size: 14px;
+        padding: 10px 18px;
+      }
+
+      .icons .icon {
+        width: 40px;
+      }
+    }
+    @media screen and (max-width: 1024px) {
+      .container {
+        width: 60%;
+        padding: 1.5rem;
+      }
+
+      .weather-units {
+        font-size: 1.25rem;
+      }
+    }
+
+
+    @media screen and (max-width: 768px) {
+      .container {
+        width: 80%;
+        margin: 2rem auto;
+        padding: 1.25rem;
+      }
+
+      input {
+        padding: 0.5rem 2rem;
+      }
+
+      .weather-info {
+        grid-template-columns: 1fr;
+      }
+
+      .weather-card {
+        justify-content: flex-start;
+      }
+
+      .weather-icon img {
+        width: 80px;
+      }
+
+      .weather-temp {
+        font-size: 1.5rem;
+      }
+    }
+
+    
+    @media screen and (max-width: 480px) {
+      header {
+        flex-direction: column;
+        align-items: flex-start;
+        padding: 20px;
+      }
+
+      nav {
+        width: 100%;
+        flex-direction: column;
+        gap: 10px;
+      }
+
+      nav a {
+        font-size: 16px;
+        padding: 5px 0;
+      }
+
+      .container {
+        width: 95%;
+        margin: 1rem auto;
+        padding: 1rem;
+      }
+
+      .weather-header {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 1rem;
+      }
+
+      .weather-units {
+        align-self: flex-end;
+      }
+
+      input {
+        width: 100%;
+      }
+
+      .weather-body {
+        margin-top: 2rem;
+      }
+
+      .weather-minmax {
+        flex-direction: column;
+        align-items: center;
+      }
+
+      .weather-card {
+        padding: 0.75rem;
+      }
+
+      .weather-card i {
+        font-size: 1.25rem;
+      }
+
+      .weather-card p {
+        font-size: 13px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <strong class="strong"onclick="window.document.location.reload()">SKYSHOTS</strong>
+
+    <div class="menu-toggle" onclick="toggleMenu()">
+      <span></span>
+      <span></span>
+      <span></span>
+    </div>
+
+    
+    <nav class="nav-links" id="navLinks">
+      <a href="newweather.html">Home</a>
+      <a href="#">Current Weather</a>
+      <a href="7day.html">3-Day Forecast</a>
+    </nav>
+  </header>
+
+  <div class="container">
+    <div class="weather-header">
+      <form class="weather-search" id="weather-search">
+        <input type="text" placeholder="Search for a city..." class="weather__searchinput" />
+        <i class="fa-solid fa-magnifying-glass"></i>
+      </form>
+      <p class="loadingMessage" style="display: none;text-align: center;">Loading...</p>
+      <p class="errorMessage" style="display: none;text-align: center;">Error....</p>
+      <div class="weather-units">
+        <span class="weather_unit_celsius">&#176C</span>
+        <span class="weather_unit_farenheit">&#176F</span>
+      </div>
+    </div>
+
+    <div class="weather-body">
+      <h1 class="weather-city"></h1>
+      <div class="weather-datetime"></div>
+      <div class="weather-forecast"> </div>
+      <div class="weather-icon"></div>
+      <p class="weather-temp"></p>
+      <div class="weather-minmax">
+        <p>Min: 12&#176</p>
+        <p>Max: 16&#176</p>
+      </div>
+    </div>
+
+    <div class="weather-info">
+      <div class="weather-card">
+        <i class="fa-solid fa-temperature-full"></i>
+        <div>
+          <p>Real Feel</p>
+          <p class="weather-realfeel">18&#176</p>
+        </div>
+      </div>
+      <div class="weather-card">
+        <i class="fa-solid fa-droplet"></i>
+        <div>
+          <p>Humidity</p>
+          <p class="weather-humidity">18&#176</p>
+        </div>
+      </div>
+      <div class="weather-card">
+        <i class="fa-solid fa-wind"></i>
+        <div>
+          <p>Wind</p>
+          <p class="weather-wind">18&#176</p>
+        </div>
+      </div>
+      <div class="weather-card">
+        <i class="fa-solid fa-gauge-high"></i>
+        <div>
+          <p>Pressure</p>
+          <p class="weather-pressure">18&#176</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    
+    function toggleMenu() {
+      const navLinks = document.getElementById("navLinks");
+      navLinks.classList.toggle("show");
+    }
+    const weatherSearch = document.getElementsByClassName("weather-search")[0];
+    const cityInput = document.getElementsByClassName("weather__searchinput")[0];
+    const loadingMessage = document.getElementsByClassName("loadingMessage")[0];
+    const errorMessage = document.getElementsByClassName("errorMessage")[0];
+    const weatherCelsius = document.getElementsByClassName("weather_unit_celsius")[0];
+    const weatherFarenheit = document.getElementsByClassName("weather_unit_farenheit")[0];
+    const weatherCity = document.getElementsByClassName("weather-city")[0];
+    const weatherForecast = document.getElementsByClassName("weather-forecast")[0];
+    const weatherIcon = document.getElementsByClassName("weather-icon")[0];
+    const weathertemp = document.getElementsByClassName("weather-temp")[0];
+    const minmaxtemp = document.getElementsByClassName("weather-minmax")[0];
+    const realFeel = document.getElementsByClassName("weather-realfeel")[0];
+    const humidity = document.getElementsByClassName("weather-humidity")[0];
+    const weatherWind = document.getElementsByClassName("weather-wind")[0];
+    const weatherPressure = document.getElementsByClassName("weather-pressure")[0];
+
+    const fetchWeather = async (city) => {
+      try {
+        loadingMessage.style.display = 'block';
+        errorMessage.style.display = 'none';
+        const response = await fetch(
+          `https://api.weatherapi.com/v1/forecast.json?key=bbf147e1d69344f8b0375335240912&q=${city}&days=1&aqi=no`
+        );
+        if (!response.ok) {
+          throw new Error('Failed to fetch weather data');
+        }
+        const data = await response.json();
+        displayWeather(data);
+      } catch (err) {
+        errorMessage.textContent = 'Failed to fetch weather data. Please check the city name.';
+        errorMessage.style.display = 'block';
+      } finally {
+        loadingMessage.style.display = 'none';
+      }
+    };
+
+    const displayWeather = (weather) => {
+      weatherCity.innerHTML = weather.location.name;
+      weatherCelsius.innerHTML = `${weather.current.temp_c}&#176C`;
+      weatherFarenheit.innerHTML = `${weather.current.temp_f}&#176F`;
+      weathertemp.innerHTML = `${weather.current.temp_c}&#176C`;
+      realFeel.innerHTML = `${weather.current.feelslike_c}&#176C`;
+      humidity.innerHTML = `${weather.current.humidity}%`;
+      weatherWind.innerHTML = `${weather.current.wind_kph} km/h`;
+      weatherPressure.innerHTML = `${weather.current.pressure_mb} mb`;
+      weatherForecast.innerHTML = weather.current.condition.text;
+      weatherIcon.innerHTML = `<img src="https:${weather.current.condition.icon}" alt="${weather.current.condition.text}">`;
+      minmaxtemp.innerHTML = `
+        <p>Min: ${weather.forecast.forecastday[0].day.mintemp_c}&#176C</p>
+        <p>Max: ${weather.forecast.forecastday[0].day.maxtemp_c}&#176C</p>`;
+    };
+
+    weatherSearch.addEventListener("submit", (e) => {
+      e.preventDefault();
+      const city = cityInput.value.trim();
+      if (city) {
+        fetchWeather(city);
+      }
+    });
+
+    fetchWeather('haryana');
+  </script>
+</body>
+</html>

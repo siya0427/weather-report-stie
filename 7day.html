@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>7-Day Forecast</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: Arial, sans-serif;
+      background: #e0f7fa;
+      margin: 0;
+      padding: 0;
+    }
+
+    header {
+      background-color: #6bb6f3;
+      padding: 20px 30px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      color: white;
+      flex-wrap: wrap;
+    }
+
+    header strong {
+      cursor: pointer;
+      font-size: 24px;
+    }
+
+    nav {
+      display: flex;
+      gap: 20px;
+    }
+
+    nav a {
+      color: white;
+      text-decoration: none;
+      font-weight: bold;
+      font-size: 16px;
+    }
+
+    .menu-toggle {
+      display: none;
+      flex-direction: column;
+      cursor: pointer;
+      margin-left: auto;
+    }
+
+    .menu-toggle span {
+      height: 3px;
+      width: 25px;
+      background: white;
+      margin: 4px 0;
+      border-radius: 2px;
+    }
+
+    .container {
+      max-width: 900px;
+      margin: 2rem auto;
+      padding: 20px;
+      background: #fff;
+      border-radius: 12px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+
+    h2 {
+      text-align: center;
+      margin-bottom: 1rem;
+    }
+
+    .forecast-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+      gap: 20px;
+    }
+
+    .forecast-card {
+      background: #caf0f8;
+      padding: 15px;
+      border-radius: 10px;
+      text-align: center;
+    }
+
+    .forecast-card img {
+      width: 50px;
+    }
+
+    .forecast-card h4 {
+      margin: 10px 0 5px;
+    }
+
+    .forecast-card p {
+      margin: 5px 0;
+    }
+
+    input {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 20px;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      font-size: 16px;
+    }
+
+    /* Responsive styles */
+    @media (max-width: 768px) {
+      nav {
+        display: none;
+        flex-direction: column;
+        width: 100%;
+        background-color: #0077b6;
+        margin-top: 10px;
+      }
+
+      nav.show {
+        display: flex;
+      }
+
+      .menu-toggle {
+        display: flex;
+      }
+
+      nav a {
+        padding: 10px 0;
+        border-top: 1px solid rgba(255, 255, 255, 0.2);
+      }
+
+      header {
+        padding-bottom: 10px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <strong onclick="window.location.href='newweather.html'">SKYSCOPE</strong>
+
+    <!-- Hamburger Icon -->
+    <div class="menu-toggle" onclick="toggleMenu()">
+      <span></span>
+      <span></span>
+      <span></span>
+    </div>
+
+    <!-- Navigation -->
+    <nav id="navMenu">
+      <a href="newweather.html">Home</a>
+      <a href="index.htm">Current Weather</a>
+      <a href="forecast.html">3-Day Forecast</a>
+    </nav>
+  </header>
+
+  <div class="container">
+    <h2>3-Day Weather Forecast</h2>
+    <input type="text" id="cityInput" placeholder="Enter city name (e.g., London)">
+    <div class="forecast-grid" id="forecastGrid">
+      <!-- Forecast cards will be inserted here -->
+    </div>
+  </div>
+
+  <script>
+    const apiKey = "bbf147e1d69344f8b0375335240912";
+    const input = document.getElementById("cityInput");
+    const grid = document.getElementById("forecastGrid");
+
+    input.addEventListener("keypress", function (e) {
+      if (e.key === "Enter") {
+        fetchForecast(input.value.trim());
+      }
+    });
+
+    function fetchForecast(city) {
+      if (!city) return;
+
+      fetch(`https://api.weatherapi.com/v1/forecast.json?key=${apiKey}&q=${city}&days=7`)
+        .then(res => res.json())
+        .then(data => {
+          displayForecast(data.forecast.forecastday);
+        })
+        .catch(err => {
+          console.error(err);
+          grid.innerHTML = `<p style="text-align:center;color:red;">City not found or API error.</p>`;
+        });
+    }
+
+    function displayForecast(days) {
+      grid.innerHTML = ""; // Clear previous content
+      days.forEach(day => {
+        const card = document.createElement("div");
+        card.className = "forecast-card";
+        card.innerHTML = `
+          <h4>${day.date}</h4>
+          <img src="https:${day.day.condition.icon}" alt="${day.day.condition.text}">
+          <p><strong>${day.day.condition.text}</strong></p>
+          <p>Min: ${day.day.mintemp_c}°C</p>
+          <p>Max: ${day.day.maxtemp_c}°C</p>
+        `;
+        grid.appendChild(card);
+      });
+    }
+
+    function toggleMenu() {
+      const nav = document.getElementById("navMenu");
+      nav.classList.toggle("show");
+    }
+
+    // Load default city on page load
+    fetchForecast("Delhi");
+  </script>
+
+</body>
+</html>
